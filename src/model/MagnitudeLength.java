@@ -13,7 +13,7 @@ public class MagnitudeLength implements Magnitude {
             case 2 -> new Centimeter();
             case 3 -> new Meter();
             case 4 -> new Kilometer();
-            default -> throw new IllegalArgumentException("Invalid entry: " + unitValue);
+            default -> throw new IllegalArgumentException();
         };
     }
 
@@ -25,5 +25,10 @@ public class MagnitudeLength implements Magnitude {
     @Override
     public String getUnitList() {
         return "[1.Millimeter / 2.Centimeter / 3.Meter / 4.Kilometer]";
+    }
+
+    @Override
+    public Boolean allowNegativeValue() {
+        return false;
     }
 }

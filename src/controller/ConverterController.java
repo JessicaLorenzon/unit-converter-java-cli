@@ -8,62 +8,54 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class ConverterController {
+    private static final View view = new View();
+    private static final Scanner scanner = new Scanner(System.in);
 
     public void run() {
         Locale.setDefault(Locale.US);
-        View view = new View();
-        Scanner scanner = new Scanner(System.in);
 
-        Magnitude magnitude = getMagnitude(view, scanner);
+        try {
+            Magnitude magnitude = getMagnitude();
 
-        double value = getValue(view, magnitude, scanner);
+            double value = getValue(magnitude);
 
-        process(view, magnitude, scanner, value);
-
+            process(magnitude, value);
+        } catch (IllegalArgumentException e) {
+            view.displayInvalidEntry();
+        }
         scanner.close();
     }
 
-    private static Magnitude getMagnitude(View view, Scanner scanner) {
-        while (true) {
-            view.displayConverterHeader();
+    private static Magnitude getMagnitude() {
+        view.displayConverterHeader();
 
-            if (!scanner.hasNextInt()) {
-                view.displayInvalidEntry();
-                scanner.next();
-                continue;
-            }
+        int magnitudeChoice = scanner.nextInt();
 
-            int magnitudeChoice = scanner.nextInt();
-
-            return switch (magnitudeChoice) {
-                case 1 -> new MagnitudeLength();
-                case 2 -> new MagnitudeWeight();
-                case 3 -> new MagnitudeTemperature();
-                default -> throw new IllegalArgumentException("Invalid entry: " + magnitudeChoice);
-            };
-        }
+        return switch (magnitudeChoice) {
+            case 1 -> new MagnitudeLength();
+            case 2 -> new MagnitudeWeight();
+            case 3 -> new MagnitudeTemperature();
+            default -> throw new IllegalArgumentException();
+        };
     }
 
-    private static double getValue(View view, Magnitude magnitude, Scanner scanner) {
-        while (true) {
-            view.displayEnterValue(magnitude.getUnitName());
+    private static double getValue(Magnitude magnitude) {
+        view.displayEnterValue(magnitude.getUnitName());
+        double value = scanner.nextDouble();
 
-            if (scanner.hasNextDouble()) {
-                return scanner.nextDouble();
-            } else {
-                view.displayInvalidValue();
-                scanner.next();
-            }
+        if (value < 0 && !magnitude.allowNegativeValue()) {
+            throw new IllegalArgumentException();
         }
+        return value;
     }
 
-    private static void process(View view, Magnitude magnitude, Scanner scanner, double value) {
+    private static void process(Magnitude magnitude, double value) {
         view.displayEnterUnit("from", magnitude.getUnitList());
         int unitFrom = scanner.nextInt();
+        Unit startUnit = magnitude.getUnit(unitFrom);
+
         view.displayEnterUnit("to", magnitude.getUnitList());
         int unitTo = scanner.nextInt();
-
-        Unit startUnit = magnitude.getUnit(unitFrom);
         Unit finalUnit = magnitude.getUnit(unitTo);
 
         Double result = Converter.converter(startUnit, finalUnit, value);

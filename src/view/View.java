@@ -1,7 +1,5 @@
 package view;
 
-import model.Unit;
-
 public class View {
 
     public void displayConverterHeader() {
@@ -26,10 +24,6 @@ public class View {
     }
 
     public void displayInvalidEntry() {
-        System.err.println("Invalid entry. Enter a number from 1 to 3.");
-    }
-
-    public void displayInvalidValue() {
-        System.out.println("Invalid value. Please enter a decimal number.");
+        System.err.println("Option out of allowed range. Try again!");
     }
 }
