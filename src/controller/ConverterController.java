@@ -1,7 +1,7 @@
 package controller;
 
 import model.*;
-import service.Converter;
+import service.ConverterService;
 import view.View;
 
 import java.util.Locale;
@@ -58,7 +58,7 @@ public class ConverterController {
         int unitTo = scanner.nextInt();
         Unit finalUnit = magnitude.getUnit(unitTo);
 
-        Double result = Converter.converter(startUnit, finalUnit, value);
+        Double result = ConverterService.convert(startUnit, finalUnit, value);
 
         view.displayResultHeader();
         view.displayResult(value, startUnit.unitText(), result, finalUnit.unitText());

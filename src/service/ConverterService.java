@@ -2,9 +2,9 @@ package service;
 
 import model.Unit;
 
-public class Converter {
+public class ConverterService {
 
-    public static Double converter(Unit startUnit, Unit finalUnit, double value) {
+    public static Double convert(Unit startUnit, Unit finalUnit, double value) {
 
         Double valueConvertedToBase = startUnit.toUnitBase(value);
         Double baseConvertedToFinal = finalUnit.fromUnitBase(valueConvertedToBase);
